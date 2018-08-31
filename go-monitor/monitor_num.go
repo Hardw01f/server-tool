@@ -10,42 +10,56 @@ import(
 		"os"
 )
 
+// init var
 var Timestamp int = 0
 var counter int = 0
 
 
 func main(){
+		//get commandline args
 		flag.Parse()
 		args := flag.Args()
 		FILENAME := args[0]
 
+		// for debug
 		//fmt.Println(FILENAME)
 		//fmt.Println("get() : ",get(FILENAME))
+
+		//get Targetfile timestamp
 		Timestamp = get(FILENAME)
 
 		//fmt.Println(reflect.TypeOf(Timestamp))
 
-		file, _ := os.Create("res_"+strconv.Itoa(Timestamp)+".txt")
+		//Create result file to ./log/
+		file, _ := os.Create("./log/res_"+strconv.Itoa(Timestamp)+".txt")
 		defer file.Close()
 
 		FirstTime := fmt.Sprint("Starting-Timestamp : ",Timestamp)
 		FirstTime = FirstTime + "\n"
 		//fmt.Println(FirstTime)
 
+		//Write to resultfile
 		fmt.Fprint(file,FirstTime)
 
 		time.Sleep(1 * time.Second)
 
 		for{
+				//Jadge Targetfile timestamp is change? 
 				if Timestamp != get(FILENAME){
+						//done Targetfile timestamp was changed
+
 						//fmt.Println("OverWriting file now !! : ",get(FILENAME))
 						WrittenTime := fmt.Sprint("OverWriting file now !! : ",get(FILENAME))
 						WrittenTime = WrittenTime + "\n"
 						//fmt.Println(WrittenTime)
+
 						if counter == 1{
+								//write Timestamp chenging time
 								fmt.Fprint(file,WrittenTime)
+
 						}else{
 								if counter == 5{
+								// wait 5 second, Exit Program
 								os.Exit(0)
 								}
 						}
@@ -56,6 +70,8 @@ func main(){
 		}
 }
 
+
+// Function of for getting Targetfile Timestamp(int)
 func get(FILENAME string)int{
 		res , err := exec.Command("ls","-la",FILENAME).Output()
 		if err != nil{
