@@ -1,5 +1,6 @@
 # server-tool
-tool for server hundle
+
+monitor which target file name and datatime change  
 
 ## USEAG
 
